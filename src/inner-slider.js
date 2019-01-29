@@ -276,15 +276,15 @@ export class InnerSlider extends React.Component {
     let childrenCount = React.Children.count(this.props.children);
     const spec = { ...this.props, ...this.state, slideCount: childrenCount };
     let slideCount = getPreClones(spec) + getPostClones(spec) + childrenCount;
-    let trackWidth = 100 / this.props.slidesToShow * slideCount;
+    let trackWidth = (100 / this.props.slidesToShow) * slideCount;
     let slideWidth = 100 / slideCount;
     let trackLeft =
-      -slideWidth *
-      (getPreClones(spec) + this.state.currentSlide) *
-      trackWidth /
+      (-slideWidth *
+        (getPreClones(spec) + this.state.currentSlide) *
+        trackWidth) /
       100;
     if (this.props.centerMode) {
-      trackLeft += (100 - slideWidth * trackWidth / 100) / 2;
+      trackLeft += (100 - (slideWidth * trackWidth) / 100) / 2;
     }
     let trackStyle = {
       width: trackWidth + "%",
@@ -720,7 +720,7 @@ export class InnerSlider extends React.Component {
       innerSliderProps = { className };
     }
     return (
-      <div {...innerSliderProps}>
+      <div {...innerSliderProps} onWheel={this.createWheelHanlder()}>
         {!this.props.unslick ? prevArrow : ""}
         <div ref={this.listRefHandler} {...listProps}>
           <Track ref={this.trackRefHandler} {...trackProps}>
@@ -732,4 +732,10 @@ export class InnerSlider extends React.Component {
       </div>
     );
   };
+
+  createWheelHanlder = () =>
+    debounce(e => {
+      if (e.deltaX > 0) return this.slickNext();
+      if (e.deltaX < 0) return this.slickPrev();
+    }, 100);
 }
