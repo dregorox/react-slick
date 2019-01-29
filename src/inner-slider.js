@@ -733,9 +733,8 @@ export class InnerSlider extends React.Component {
     );
   };
 
-  createWheelHanlder = () =>
-    debounce(e => {
-      if (e.deltaX > 0) return this.slickNext();
-      if (e.deltaX < 0) return this.slickPrev();
-    }, 100);
+  createWheelHanlder = () => e => {
+    if (e.deltaX > 0) return this.slickNext();
+    if (e.deltaX < 0) return this.slickPrev();
+  };
 }
